@@ -5,11 +5,11 @@ import { HomePageProps } from '../types';
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
   const response = await fetch('https://raw.githubusercontent.com/kubra-kzlk/test_dinomon/heads/main/data.json');
   const data = await response.json();
-
-   // Group by region.id and build RegionWithDinomon[]
+  const dinomonList = data.dinomon as Dinomon[];
+  // Group by region.id and build RegionWithDinomon[]
   const byRegion = new Map<number, RegionWithDinomon>();
 
-  for (const d of data as Dinomon[]) {
+  for (const d of dinomonList) {
     const r = d.region;
     let bucket = byRegion.get(r.id);
     if (!bucket) {
@@ -28,8 +28,8 @@ export default function HomePage(props: HomePageProps) {
   const regions = props.regions;
 
   return (
-  <div>
-    <h1>Regions</h1>
+    <div>
+      <h1>Regions</h1>
       {regions.map(function (region) {
         return (
           <section key={region.id}>

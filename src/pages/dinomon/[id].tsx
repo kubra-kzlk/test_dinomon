@@ -4,11 +4,11 @@ import Image from 'next/image';
 import { Dinomon, DinomonDetailPageProps } from '../../types';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const response = await fetch('https://raw.githubusercontent.com/kubra-kzlk/test_dinomon/heads/main/data.json');
+  const response = await fetch('https://raw.githubusercontent.com/kubra-kzlk/test_dinomon/main/data.json');
   const jsonData = await response.json();
 
   // Create paths for each dinomon by ID
-  const paths = jsonData.map((d:any) => ({ params: { id: String(d.id) } }));
+  const paths = jsonData.dinomon.map((d: Dinomon) => ({ params: { id: String(d.id) } }));
 
   return { paths, fallback: false };
 };
@@ -16,7 +16,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<DinomonDetailPageProps, { id: string }> = async ({
   params,
 }) => {
-    if (!params?.id || Array.isArray(params.id)) return { notFound: true, revalidate: 60 };
+  if (!params?.id || Array.isArray(params.id)) return { notFound: true, revalidate: 60 };
   const id = Number(params.id);
   if (Number.isNaN(id)) return { notFound: true, revalidate: 60 };
 
@@ -24,9 +24,9 @@ export const getStaticProps: GetStaticProps<DinomonDetailPageProps, { id: string
   const { dinomon } = await res.json() as { dinomon: Dinomon[] }; // <-- read .dinomon
 
   const match = dinomon.find(d => d.id === id);
-  if (!match) return { notFound: true, revalidate: 60 };
+  if (!match) return { notFound: true };
 
-  return { props: { dinomon: match }, revalidate: 3600 };
+  return { props: { dinomon: match } };
 };
 
 export default function DinomonDetailPage(props: DinomonDetailPageProps) {
@@ -35,21 +35,16 @@ export default function DinomonDetailPage(props: DinomonDetailPageProps) {
   return (
     <main>
       <h1>{dinomon.name}</h1>
-      <Image
-        src={dinomon.image || '/placeholder.png'} alt={''}
-        width={300}
-        height={300}
-      />
 
       <h2>Description</h2>
       <p>{dinomon.description}</p>
 
       <h2>Type</h2>
-      <p>{dinomon.type }</p>
+      <p>{dinomon.type}</p>
 
       <h2>Region</h2>
       <p><strong>{dinomon.region.name}</strong></p>
-      <p>{dinomon.region.description }</p>
+      <p>{dinomon.region.description}</p>
     </main>
   );
 }

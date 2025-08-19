@@ -10,7 +10,7 @@ export default async function handler(
     //derive regions by collecting the unique region objects from the dinomon list and return them deduped and sorted by id
      // Collect unique regions by id
     const byId = new Map<number, Region>();
-    for (const d of jsonData) {
+    for (const d of jsonData.dinomon) {
       const r = d.region;
       if (r && !byId.has(r.id)) {
         byId.set(r.id, { id: r.id, name: r.name, description: r.description });
