@@ -136,14 +136,13 @@
     - For **/regions** API, map `dinomon.map(d => d.region)`, then dedupe by `id` using a `Map<number, Region>()`, then return `Array.from(map.values()).sort((a,b)=>a.id-b.id)`.
     - For the **SSR home**, group by `region.id`; a simple `reduce` works great.
     - For **SSG**, `generateStaticParams` (or `getStaticPaths` if you’re on pages router) should read the single JSON and return `{ id: string }[]` for all items.
+    ---------------------------------------------------------------------------------------------------------------------
     
 - uitleg SSR SSG CSR
     
-    the three modes mostly differ in **where** the HTML is produced and **when** the data is fetched. here’s a clear, code-first way to see the differences (using Next.js “app router” style, since that’s what your exercise fits).
-    
-    Same idea in the old “pages/” router
+    the three modes mostly differ in **where** the HTML is produced and **when** the data is fetched.  (using Next.js “app router” style. same idea in the old “pages/” router
     
     - **CSR:** normal React + `useEffect` in component.
     - **SSR:** `export async function getServerSideProps(ctx) { /* fetch */ return { props } }`
     - **SSG:** `export async function getStaticProps() { /* fetch at build */ return { props} }`
-    - **Dynamic SSG:** add `getStaticPaths()` to declare which `[id]` pages to build.
+                                     `getStaticPaths()` to declare which `[id]` pages to build.
